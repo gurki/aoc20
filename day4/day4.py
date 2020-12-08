@@ -5,13 +5,13 @@ reValid = re.compile( r"(?:(?:(\w{3}):([\w\d#]+))[\s\n]?)" )
 reHeight = re.compile( r"(\d+)(cm|in)" )
 reColor = re.compile( r"#[0-9a-f]{6}" )
 reEye = re.compile( r"amb|blu|brn|gry|grn|hzl|oth" )
-rePid = re.compile( r"^\d{9}$" )
+rePid = re.compile( r"\d{9}" )
 
 targets = set([ "byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid" ])
 
 
 def validHeight( height ):
-    hgtMatch = reHeight.match( height )
+    hgtMatch = reHeight.fullmatch( height )
     if not hgtMatch: return False
 
     hgt = int( hgtMatch.group( 1 ) )
@@ -36,9 +36,9 @@ def validate( line ):
     if iyr < 2010 or iyr > 2020: return False
     if eyr < 2020 or eyr > 2030: return False
     if not validHeight( match[ "hgt" ] ): return False
-    if not reColor.match( match[ "hcl" ] ): return False
-    if not reEye.match( match[ "ecl" ] ): return False
-    if not rePid.match( match[ "pid" ] ): return False
+    if not reColor.fullmatch( match[ "hcl" ] ): return False
+    if not reEye.fullmatch( match[ "ecl" ] ): return False
+    if not rePid.fullmatch( match[ "pid" ] ): return False
 
     return True
 
