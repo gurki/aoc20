@@ -7,14 +7,13 @@ def rotate( v, deg ):
     c = np.cos( rad )
     return np.array( [ v[0] * c - v[1] * s, v[0] * s + v[1] * c ] )
 
-
 cmds = list( map(
     lambda line: ( line[ 0 ], int( line[ 1: ] ) ),
     open( "input.txt" ).read().split( "\n" )
 ))
 
 pos = np.array( [ 0.0, 0.0 ] )
-ori = np.array( [ 1.0, 0.0 ] )
+anc = np.array( [ 10.0, 1.0 ] )
 
 dirs = {
     "N": np.array( [  0.0, 1.0 ] ),
@@ -25,11 +24,11 @@ dirs = {
 
 for act, val in cmds:
     if act in dirs:
-        pos += val * dirs[ act ]
+        anc += val * dirs[ act ]
     else:
-        if act == "L": ori = rotate( ori, val )
-        elif act == "R": ori = rotate( ori,-val )
-        else: pos += val * ori
-    print( pos, ori )
+        if act == "L": anc = rotate( anc, val )
+        elif act == "R": anc = rotate( anc,-val )
+        else: pos += val * anc
+    print( pos, anc )
 
 print( np.sum( np.abs( pos ) ))
