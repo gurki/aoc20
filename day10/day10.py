@@ -1,40 +1,31 @@
-fin = open( "example.txt" )
+fin = open( "input.txt" )
 
 joltages = sorted( [ 0 ] + list( map( int, fin ) ))
 joltages.append( max( joltages ) + 3 )
 
+# part 1
+
 diffs = list( map( lambda x: x[1] - x[0], zip( joltages, joltages[1:] )))
 diffMul = diffs.count( 1 ) * diffs.count( 3 )
-print( "part1:", diffMul, "\n" )
+print( "part1:", diffMul )
 
-counted = set()
-print( joltages )
+#  part 2
 
-def countArrangements( joltages ):
-    print( joltages )
-    if len( joltages ) < 2:
-        return 0
-    if joltages[ 0 ] in counted:
-        return 0
-    counted.add( joltages[ 0 ] )
-    diff = joltages[ 1 ] - joltages[ 0 ]
-    if diff > 3:
-        return countArrangements( joltages[ 1: ] )
-    else:
-        opt1 = countArrangements( joltages[ 1: ] )
-        opt2 = countArrangements( [ joltages[0] ] + joltages[ 2: ] )
-        return 1 + opt1 + opt2
+counts = list( map( lambda x: 0, joltages ) )
 
-totalCount = countArrangements( joltages )
+def countCombinations( jolts, fromId, counts ):
+    if fromId < 0:
+        return
+    val0 = jolts[ fromId ]
+    for index in range( fromId + 1, len( jolts ) - 1 ):
+        if jolts[ index ] - val0 > 3:
+            break
+        counts[ fromId ] += counts[ index ]
 
-print( totalCount )
+for index in range( len( joltages ) - 2, len( joltages ) ):
+    counts[ index ] = 1
 
+for index in range( len( joltages ) - 3, -1, -1 ):
+    countCombinations( joltages, index, counts )
 
-# [0 4] 5 6 7
-#   [4 5] 6 7
-#     [4 6] 7
-#       [4 7]
-#       [6 7]
-#     [5 6] 7
-#         [6 7]
-#         [5 7]
+print( "part2: ", counts[ 0 ] )
