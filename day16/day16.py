@@ -41,9 +41,11 @@ print( err )
 def validTicket( ticket ):
     return all( [ hasValidField( val ) for val in ticket ] )
 
+# discard invalid tickets
 validTickets = list( filter( validTicket, tickets ) )
-invalidOptions = {}
 
+# collect which fields are invalid
+invalidOptions = {}
 for i in range( len( ticket ) ):
     invalidOptions[ i ] = set()
 
@@ -54,6 +56,7 @@ for ticket in validTickets:
             if not validField( ranges, val ):
                 invalidOptions[ i ].add( fieldId )
 
+# deduce actual fields by process of elimination
 fieldIds = set( fields.keys() )
 unavailable = set()
 assignment = {}
@@ -65,6 +68,7 @@ for i in range( len( fieldIds ) ):
         unavailable.update( valids )
         assignment[ pos ] = list( valids )[ 0 ]
 
+# count departures
 prod = 1
 for pos, fieldId in assignment.items():
     if not fieldId.startswith( "departure" ): continue
