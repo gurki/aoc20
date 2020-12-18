@@ -2,6 +2,9 @@ from itertools import product
 import numpy as np
 import plotly.express as px
 
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
 
 def printVoxels( voxels ):
     lsts = list( zip( *voxels ) )
@@ -41,11 +44,17 @@ def drawVoxels( voxels ):
     points = np.array( list( map( list, voxels ) ) )
     fig = px.scatter_3d( points, x=0, y=1, z=2 )
     fig.show()
+    # print( voxels )
+    # print( points )
+    # fig = plt.figure()
+    # ax = fig.gca(projection='3d')
+    # ax.voxels( points[:,:,:,0] )
+    # plt.show()
 
 def activeNeighbourCount( v, curr ):
     count = 0
     for off in product( [-1, 0, 1 ], repeat=4 ):
-        if off == ( 0, 0, 0 ): continue
+        if off == ( 0, 0, 0, 0 ): continue
         w = ( v[0] + off[0], v[1] + off[1], v[2] + off[2], v[3] + off[3] )
         if w in curr:
             count += 1
@@ -53,7 +62,7 @@ def activeNeighbourCount( v, curr ):
 
 def gatherInactiveNeighbours( v, curr, inactive ):
     for off in product( [-1, 0, 1 ], repeat=4 ):
-        if off == ( 0, 0, 0 ): continue
+        if off == ( 0, 0, 0, 0 ): continue
         w = ( v[0] + off[0], v[1] + off[1], v[2] + off[2], v[3] + off[3] )
         if w in curr: continue
         inactive.add( w )
@@ -82,7 +91,7 @@ def updateCycle( voxels ):
 
 
 def partA():
-    grid = open( "example.txt" ).read().split("\n")
+    grid = open( "input.txt" ).read().split("\n")
     voxels = parseGrid( grid )
     printVoxels( voxels )
     # print( voxels )
@@ -91,8 +100,6 @@ def partA():
         voxels = updateCycle( voxels )
         print( i, len( voxels ) )
         # drawVoxels( voxels )
-        printVoxels( voxels )
-
-
+        # printVoxels( voxels )
 
 partA()
